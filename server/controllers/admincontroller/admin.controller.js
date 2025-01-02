@@ -5,7 +5,9 @@ import { User } from "../../models/user/user.model";
 
 
 export const signup = async function (req,res){
-  const {name, email, password} = req.body;
+  try 
+  {
+    const {name, email, password} = req.body;
 
   if(!name || !email || !password){
     return res.status(400).json({
@@ -28,15 +30,103 @@ export const signup = async function (req,res){
   const newAdmin = await Admin.create({
     name,
     email,
-    password:hashedPassword
+    password:hashedPassword,
+    status:"pending"
   })
 
-  return res.status(200).json({
-    message:"Admin account created successfully",
-    succes:true,
-    newAdmin
+  await newAdmin.save()
+  return res.status(201).json({
+    message:"Admin request send for verify ",
   })
 
-
-
+} 
+  catch (error) 
+  {
+    return res.status(500).json({ message: "Error updating admin status.", error });
+  }
 }
+
+
+export const signin = async function (req,res){
+  try 
+  {
+    const {name, email, password} = req.body;
+
+  if( !email || !password){
+    return res.status(400).json({
+      message:"Something is missing",
+      success:false
+    })
+  }
+
+  const admin = await Admin.findOne({email})
+
+  if(!admin)
+  {
+    return res.status(404).json({
+      message:"Incorrect email",
+      message:false
+    })
+  }
+
+  const isMatch = await bcrypt.compare(password, admin.password);
+
+  if (!isMatch) 
+    {
+      return res.status(401).json({
+        message: "Invalid credentials" ,
+        success:false
+      });
+    }
+
+  if (admin !== approved)
+  {
+    return res.status(400).json({
+      message:"Approval required",
+      message:false
+    })
+  }
+
+  if (admin == approved)
+  {
+    const token = jwt.sign(
+      { id: admin._id, role: admin.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" } 
+    );
+    res.json({
+      message: "Login successful.",
+      token,
+    });
+
+  }
+
+  if (admin.role === "superadmin") {
+     return res.json({ message: `Welcome, Super Admin ${superAdmin.name}` });
+    } else {
+     return res.json({ message: "Login successful.", admin });
+    }
+
+} 
+  catch (error) 
+  {
+    return res.status(500).json({ message: "Error updating admin status.", error });
+    
+    
+  }
+}
+
+export const logout = async function (req,res){
+  try 
+  {
+    req.headers(token, "")
+    
+  } 
+  catch (error) 
+  {
+    return res.status(500).json({ message: "Error in logout.", error });
+  }
+}
+
+
+  
