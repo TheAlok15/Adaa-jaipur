@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 const ObjectId = mongoose.ObjectId;
 
-const productSchema = new Schema(
-  {
+const productSchema = new Schema({
     productId: { type: ObjectId, required: true, unique: true },
     productDescription: { type: String, required: true },
     productQuantity: { type: Number, default: 1 },

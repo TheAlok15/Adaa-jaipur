@@ -8,14 +8,14 @@ const cartSchema = new Schema({
   items: [
     {
       productId: { type: ObjectId, ref: "Product", required: true },
-      quantity: { type: Number, default: 1 },
-      color: { type: String, required: true },
-      size: { type: String, required: true },
+      quantity: { type: Number, default: 1, min:1 },
+      color: { type: String, default: "" },
+      size: { type: String, default: ""},
       price: { type: Number, required: true },
       totalPrice: { type: Number, required: true },
     },
   ],
-  grandTotal: { type: Number, required: true },
+  grandTotal: { type: Number, required: true, default:0 },
 
 
 },{timestamps:true})

@@ -7,6 +7,12 @@ const userSchema = new Schema({
   email:{type:String, require:true, unique:true},
   password:{type:String, require:true},
   profilePicture:{type:ObjectId, default:""},
+  address: {
+    street: { type: String, default:"" },
+    city: { type: String, default:""},
+    postalCode: { type: String, default:"" },
+    country: { type: String, default:"" },
+  },
   cartItems:[{type:ObjectId, ref:"Cart"}],
   wishlistItems:[{type:ObjectId, ref:"Wishlist"}],
   orderItems:[{type:ObjectId, ref:"Order"}],

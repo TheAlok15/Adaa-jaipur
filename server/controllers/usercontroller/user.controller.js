@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import { Admin } from "../../models/admin/admin.model.js"
+import { User } from '../../models/user/user.model.js';
 
   export const signup = async (req,res)=>{
    try {
@@ -12,7 +14,7 @@ import bcrypt from 'bcrypt'
         });
       }
   
-      const user = await User.findOne({email});
+      const user = await User.findOne({email}) || await Admin.findOne({email});
   
       if (user) {
         return res.status(401).json({
@@ -21,7 +23,7 @@ import bcrypt from 'bcrypt'
         });
       }
   
-      const hashedPassword = await bcrypt.hash(password, 5);
+      const hashedPassword = await bcrypt.hash(password, 10);
   
       await User.create({
         name,
@@ -95,7 +97,7 @@ import bcrypt from 'bcrypt'
             message: `Welcome back ${user.name}`,
             success: true,
             user,
-          });
+          }.select(-password));
   
       
     } catch (e) {
@@ -118,8 +120,67 @@ import bcrypt from 'bcrypt'
   }
   catch(e)
   {
-    console.log("error in logout end point"); 
+    console.log("Error in logout", e.message || e);
+    return res.status(501).json({
+      message:"Internal server error",
+      success:false
+    }) 
       
   }
+  };
+
+  export const updateProfile = async function (req,res){
+    try 
+    {
+      const userId = req.id;
+      const { name, address } = req.body
+      const { street, postalCode, state, country } = address || {};
+  
+      if (!userId) 
+      {
+        return res.status(400).json({
+          message:"You are not authorized",
+          success:false
+        })
+      }
+
+      const isName = name && name !== user.name;
+      const isStreet = street && street !== user.address.street;
+      const isPostalCode = postalCode && postalCode !== user.address.postalCode;
+      const isState = state && state !== user.address.state;
+      const isCountry = country && country !== user.address.country;
+
+
+      if (!isName && !isStreet && !isPostalCode && !isState && !isCountry) {
+        return res.status(400).json({
+          message:"Nothing changes",
+          success:false
+        })
+        
+      }
+
+      if(isName) user.name = name
+      if(isStreet) user.address.street = street
+      if(isPostalCode) user.address.postalCode = postalCode
+      if(isState) user.address.state = state
+      if(isCountry) user.address.country = country
+
+      await user.save()
+
+      return res.status(200).json({
+        message:"Profile updated successfully",
+        success:true
+      })
+      
+    } 
+    catch (error) 
+    {
+      console.log("Error in update profile of user", error.message || error);
+      return res.status(501).json({
+        message:"Internal server error",
+        success:false
+      })
+    }
+
   };
 

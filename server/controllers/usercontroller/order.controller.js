@@ -56,7 +56,9 @@ export const createOrder = async function (req, res) {
       success: true,
       order,
     });
-  } catch (error) {
+  } 
+  catch (error) 
+  {
     console.error("Error in createOrder:", error.message || error);
     res.status(500).json({
       message: "Internal server error",
@@ -92,7 +94,9 @@ export const getOrderDetails = async function (req, res) {
       success: true,
       orders,
     });
-  } catch (error) {
+  } 
+  catch (error) 
+  {
     console.error("Error in getOrderDetails:", error.message || error);
     res.status(500).json({
       message: "Internal server error",

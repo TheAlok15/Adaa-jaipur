@@ -26,7 +26,9 @@ const userOrGuestMiddleware = async (req, res, next) => {
           maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         });
         req.guestId = guestId;
-      } else {
+      } 
+      else 
+      {
         req.guestId = req.cookies.guestId;
       }
     }
