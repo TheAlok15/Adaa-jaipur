@@ -42,15 +42,19 @@ export const signup = async function (req,res){
 } 
   catch (error) 
   {
-    return res.status(500).json({ message: "Error updating admin status.", error });
+    console.log("Error in admin signup", error.message || error);
+    return res.json({
+      message:"Internal server error",
+      success:false
+    })
+    
   }
-}
-
+};
 
 export const signin = async function (req,res){
   try 
   {
-    const {name, email, password} = req.body;
+    const { email, password} = req.body;
 
   if( !email || !password){
     return res.status(400).json({
@@ -64,7 +68,7 @@ export const signin = async function (req,res){
   if(!admin)
   {
     return res.status(404).json({
-      message:"Incorrect email",
+      message:"Email not found",
       message:false
     })
   }
@@ -91,7 +95,7 @@ export const signin = async function (req,res){
   {
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
-      process.env.JWT_SECRET,
+      process.env.JWT_ADMIN_SECRET,
       { expiresIn: "30d" } 
     );
     res.json({
@@ -110,11 +114,14 @@ export const signin = async function (req,res){
 } 
   catch (error) 
   {
-    return res.status(500).json({ message: "Error updating admin status.", error });
-    
+    console.log("Error in admin signin", error.message || error);
+    return res.json({
+      message:"Internal server error",
+      success:false
+    })
     
   }
-}
+};
 
 export const logout = async function (req,res){
   try 
@@ -124,9 +131,13 @@ export const logout = async function (req,res){
   } 
   catch (error) 
   {
-    return res.status(500).json({ message: "Error in logout.", error });
+    console.log("Error in admin logout", error.message || error);
+    return res.json({
+      message:"Internal server error",
+      success:false
+    })
   }
-}
+};
 
 
   

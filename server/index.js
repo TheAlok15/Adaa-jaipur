@@ -18,7 +18,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 
-app.use("/api/v1/user/", userRoute)
+app.use("/api/v1/user", userRoute)
 
 
 dbConnect();

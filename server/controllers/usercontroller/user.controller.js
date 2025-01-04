@@ -97,7 +97,7 @@ import { User } from '../../models/user/user.model.js';
             message: `Welcome back ${user.name}`,
             success: true,
             user,
-          }.select(-password));
+          });
   
       
     } catch (e) {

@@ -6,7 +6,7 @@ const userSchema = new Schema({
   name:{type:String, require:true},
   email:{type:String, require:true, unique:true},
   password:{type:String, require:true},
-  profilePicture:{type:ObjectId, default:""},
+  // profilePicture:{type:ObjectId, default:""},
   address: {
     street: { type: String, default:"" },
     city: { type: String, default:""},

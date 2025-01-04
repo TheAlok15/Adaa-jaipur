@@ -13,7 +13,7 @@ export const adminAuth = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_ADMIN_SECRET);
 
     const admin = await Admin.findById(decoded.id);
 

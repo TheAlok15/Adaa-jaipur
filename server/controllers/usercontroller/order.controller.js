@@ -1,7 +1,7 @@
 import { Order } from "../../models/user/order.model.js";
 import { Cart } from "../../models/user/cart.model.js";
 
-export const createOrder = async function (req, res) {
+export const placeOrder = async function (req, res) {
   try {
     const authenticatedUserId = req.id;
 
