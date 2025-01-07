@@ -98,9 +98,11 @@ export const signin = async function (req,res){
       process.env.JWT_ADMIN_SECRET,
       { expiresIn: "30d" } 
     );
-    res.json({
+    return res.json({
       message: "Login successful.",
+      success: true,
       token,
+      role: admin.role,
     });
 
   }
@@ -123,21 +125,23 @@ export const signin = async function (req,res){
   }
 };
 
-export const logout = async function (req,res){
-  try 
-  {
-    req.headers(token, "")
-    
-  } 
-  catch (error) 
-  {
-    console.log("Error in admin logout", error.message || error);
+export const logout = async (req, res) => {
+  try {
+    // Invalidate the token (for example, by clearing it on the client side)
+    res.clearCookie("token"); // Use this if you're working with cookies
     return res.json({
-      message:"Internal server error",
-      success:false
-    })
+      message: "Logout successful.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error in admin logout:", error.message || error);
+    return res.status(500).json({
+      message: "Internal server error.",
+      success: false,
+    });
   }
 };
+
 
 
   

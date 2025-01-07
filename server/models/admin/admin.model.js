@@ -8,9 +8,10 @@ const adminSchema = new Schema({
   password:{type:String, require:true},
   role:{type:String, enum:["supperAdmin", "admin"], default:"admin", require:true},
   activityLog:[{
-    action:String,
-    timestamps:{type:Date, default:Date.now},
-    details:{type:Object}
+    actionPerformed: { type: String }, // e.g., "Created Product"
+      resourceId: { type: mongoose.ObjectId }, // ID of the resource
+      resourceType: { type: String }, // e.g., "Product", "Category"
+      timestamp: { type: Date, default: Date.now },
   }],
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
 

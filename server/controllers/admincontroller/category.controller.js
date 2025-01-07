@@ -8,7 +8,7 @@ export const addCategory = async (req, res) => {
 
     const admin = req.admin;
 
-    if (admin.role !== 'supperAdmin' && admin.role !== 'admin') {
+    if (admin.role !== 'superAdmin' && admin.role !== 'admin') {
       return res.status(403).json({
         message: "Unauthorized access. Only admins can create categories.",
         success: false,
@@ -57,7 +57,7 @@ export const deleteCategory = async (req, res) => {
 
     const admin = req.admin;
 
-    if (admin.role !== 'supperAdmin' && admin.role !== 'admin') {
+    if (admin.role !== 'superAdmin' && admin.role !== 'admin') {
       return res.status(403).json({
         message: "Unauthorized access. Only admins can create categories.",
         success: false,
@@ -87,6 +87,65 @@ export const deleteCategory = async (req, res) => {
   {
     return res.status(500).json({
       message: "An error occurred while deleting the category.",
+      error: error.message,
+      success: false,
+    });
+  }
+};
+
+
+
+export const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    return res.status(200).json({
+      message: "Categories fetched successfully.",
+      categories,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred while fetching categories.",
+      error: error.message,
+      success: false,
+    });
+  }
+};
+
+// Update Category
+export const updateCategory = async (req, res) => {
+  try {
+    const { categoryId, categoryName, subCategories } = req.body;
+    const admin = req.admin;
+
+    if (admin.role !== "superAdmin" && admin.role !== "admin") {
+      return res.status(403).json({
+        message: "Unauthorized access. Only admins can update categories.",
+        success: false,
+      });
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      { categoryName, subCategories },
+      { new: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({
+        message: "Category not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Category updated successfully.",
+      category: updatedCategory,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred while updating the category.",
       error: error.message,
       success: false,
     });

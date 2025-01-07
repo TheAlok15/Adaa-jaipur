@@ -3,11 +3,12 @@ const { Schema, model } = mongoose;
 
 const wishlistSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     guestId: { type: String, required: false },
     items: [
       {
-        product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        productName: {type: String, require: true},
         color: { type: String },
         size: { type: String },
         addedAt: { type: Date, default: Date.now },
