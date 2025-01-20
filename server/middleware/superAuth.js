@@ -1,18 +1,23 @@
-import bcrypt from "bcrypt";
+import jwt from'jsonwebtoken';
 
- const verifySuperAdmin = async (req, res, next) => {
-  const { email, password } = req.body;
-
-  if (email !== process.env.SUPERADMIN_EMAIL) {
-    return res.status(403).json({ message: "Access denied: Invalid email", success: false});
+ const superAuthentication = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Access Denied" });
   }
 
-  const isPasswordValid = await bcrypt.compare(password, process.env.SUPERADMIN_PASSWORD);
-  if (!isPasswordValid) {
-    return res.status(403).json({ message: "Access denied: Invalid password", success: false });
-  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  next();
+    if (decoded.role !== "superadmin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    req.superAdmin = decoded; // Attach decoded details (e.g., name) to the request object
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid Token" });
+  }
 };
 
-export default verifySuperAdmin;
+export default superAuthentication;
